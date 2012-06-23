@@ -3,6 +3,7 @@
 (comment "Image processing")
 
 (import '(java.awt.image BufferedImage)
+        '(java.awt Color)
         '(java.io File)
         '(javax.imageio ImageIO))
 
@@ -18,6 +19,13 @@
   [image x y c]
   (if (and (> x -1) (> y -1) (< x (. image getWidth)) (< y (. image getHeight)))
     (. image setRGB (int x) (int y) c)))
+
+(defn spot "Draws a colour in a circle on an image"
+  [image x y r c]
+  (if (and (> x -1) (> y -1) (< x (. image getWidth)) (< y (. image getHeight)))
+    (let [g (. image getGraphics) diameter (* r 2)]
+      (. g setColor Color/YELLOW)
+      (. g fillArc (- x r) (- y r) diameter diameter 0 360))))
 
 (defn write-to-file "Writes an image to file."
   [image f]

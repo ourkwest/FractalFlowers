@@ -10,7 +10,6 @@
   (if (not (file-exists? f)) (spit f html)))
 
 (def img (image 800 800))
-(defn done [] (write-to-file img (filename ".png")))
   
 (comment "geometry")
 
@@ -18,30 +17,22 @@
 
 (defn drawplace
   [p]
-  (draw img (p :x) (p :y) (int (p :c))))
-  
-(defn writeplace
-  [p]
-  (println p))
+  (spot img (p :x) (p :y) (* (p :s) 25) (int (p :c))))
 
 (defn addplace 
   [p2 p1]
   (struct place 
-    (+ (p1 :x) (* (. Math cos (p1 :r)) (p2 :x) (p1 :s)) (* (. Math sin (p1 :r)) (p2 :y) (p1 :s)))
-	(+ (p1 :y) (* (. Math sin (p1 :r)) (p2 :x) (p1 :s)) (* (. Math cos (p1 :r)) (p2 :y) (p1 :s) -1))
-	(+ (p1 :r) (p2 :r))
-	(* (p1 :s) (p2 :s))
-	(mod (* (p1 :c) (p2 :c)) (* 255 255 255))))
+          (+ (p1 :x) (* (. Math cos (p1 :r)) (p2 :x) (p1 :s)) (* (. Math sin (p1 :r)) (p2 :y) (p1 :s)))
+          (+ (p1 :y) (* (. Math sin (p1 :r)) (p2 :x) (p1 :s)) (* (. Math cos (p1 :r)) (p2 :y) (p1 :s) -1))
+          (+ (p1 :r) (p2 :r))
+          (* (p1 :s) (p2 :s))
+          (mod (* (p1 :c) (p2 :c)) (* 255 255 255))))
 
-(defn drawblob
-  [p pr]
-  (dorun (map (fn [r] (drawplace (addplace pr (assoc p :r r)))) (range 0 6))))
-	
 (defn draw-addplace
   [p2 p1]
   (do
-    (drawblob p1 (struct place 0 2 0 1 1))
-	(addplace p2 p1)))
+    (drawplace p1)
+    (addplace p2 p1)))
 	
 (def centre (struct place 400 400 0 1 3))
   
@@ -57,16 +48,16 @@
   [f n]
   (fn [arg] 
     (loop [arg arg n n]
-	  (if (< n 1) 
-	    arg
-		(recur (f arg) (dec n))))))
+      (if (< n 1) 
+        arg
+        (recur (f arg) (dec n))))))
 		
 (defn f-tree
   [fn1 fn2 n]
   (loop [fna fn1 fnb fn2 n n]
     (if (< n 1) 
-	  fna
-	  (recur (f-then fn1 (f-both fna fnb)) (f-then fn2 (f-both fnb fna)) (dec n)))))
+      fna
+      (recur (f-then fn1 (f-both fna fnb)) (f-then fn2 (f-both fnb fna)) (dec n)))))
 		
 		
 (comment "fractal tree")
@@ -83,3 +74,5 @@
 (defn fun []
   (fn-f centre)
   (fn-f (assoc centre :r (Math/PI))))
+
+(defn done [] (write-to-file img (filename ".png")))
