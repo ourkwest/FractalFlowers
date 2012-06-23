@@ -18,7 +18,7 @@
 
 (defn drawplace
   [p]
-  (spot img (p :x) (p :y) (* (p :r) 2) (int (p :c))))
+  (spot img (p :x) (p :y) (* (p :s) 25) (int (p :c))))
 
 (defn addplace 
   [p2 p1]
