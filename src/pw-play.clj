@@ -1,54 +1,16 @@
-(ns playing)
+(ns pw-play)
+
+(use 'pw-image 'pw-tempfile)
 
 (comment "Fractal Flowers")
-
-(comment "Image processing")
-
-(import '(java.awt.image BufferedImage)
-        '(java.io File)
-		'(javax.imageio ImageIO))
-
-(defn colour "Creates a colour as an array of 3 integers."
-  [r g b]
-  (int-array [r g b]))
-  
-  
-(defn make-colour "test annonymous function overloading by arity"
-  [r g b]
-  (fn 
-    ([] (+ (* r 255 255) (* g 255) b)) 
-	([other] (println r g b other))))
-  
-		
-(defn image "Creates an image to write to."
-  [width height]
-  (new BufferedImage width height (BufferedImage/TYPE_INT_RGB)))
-
-(defn draw "Draws a colour to a pixel of an image"
-  [image x y c]
-  (if (and (> x -1) (> y -1) (< x (. image getWidth)) (< y (. image getHeight)))
-    (. image setRGB (int x) (int y) c)))
-
-(defn write-to-file "Writes an image to file."
-  [image f]
-  (. ImageIO write image "png" (new File f)))
-
-(defn filename
-  [arg]
-  (str (System/getProperty "user.dir") "/deleteme" arg))
-  
-(def img (image 800 800))
-(defn done [] (write-to-file img (filename ".png")))
-
-(defn file-exists?
-  [filename]
-  (. (new File filename) exists))
   
 (def html (str "<html><body><img src=\"" (filename ".png") "\"/></body></html>"))
   
 (let [f (filename ".html")]
   (if (not (file-exists? f)) (spit f html)))
 
+(def img (image 800 800))
+(defn done [] (write-to-file img (filename ".png")))
   
 (comment "geometry")
 
