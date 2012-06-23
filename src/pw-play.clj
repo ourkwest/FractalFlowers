@@ -1,6 +1,7 @@
 (ns pw-play)
 
 (use 'pw-image 'pw-tempfile)
+(import '(java.awt Color))
 
 (comment "Fractal Flowers")
   
@@ -18,7 +19,7 @@
 
 (defn drawplace
   [p]
-  (spot img (p :x) (p :y) (* (p :s) 25) (int (p :c))))
+  (spot img (p :x) (p :y) (* (p :s) 25) (p :c)))
 
 (defn addplace 
   [p2 p1]
@@ -27,7 +28,7 @@
           (+ (p1 :y) (* (. Math sin (p1 :r)) (p2 :x) (p1 :s)) (* (. Math cos (p1 :r)) (p2 :y) (p1 :s) -1))
           (+ (p1 :r) (p2 :r))
           (* (p1 :s) (p2 :s))
-          (mod (* (p1 :c) (p2 :c)) (* 255 255 255))))
+          (merge-colour (p1 :c) (p2 :c) 0.01)))
 
 (defn draw-addplace
   [p2 p1]
@@ -35,7 +36,7 @@
     (drawplace p1)
     (addplace p2 p1)))
 	
-(def centre (struct place 400 400 0 1 3))
+(def centre (struct place 400 400 0 1 (new Color 255 255 0 50)))
   
 (defn f-then
   [fn1 fn2]
@@ -63,9 +64,9 @@
 		
 (comment "fractal tree")
 (comment "                                     x y r s c")
-(def fn-a (partial draw-addplace (struct place 0 1 0.01 1 5)))
-(def fn-b (partial draw-addplace (struct place 0 1 -0.01 1 7)))
-(def fn-s (partial draw-addplace (struct place 0 0 -0.1 0.75 1)))
+(def fn-a (partial draw-addplace (struct place 0 1 0.01 1 (new Color 255 127 0 5))))
+(def fn-b (partial draw-addplace (struct place 0 1 -0.01 1 (new Color 200 200 0 5))))
+(def fn-s (partial draw-addplace (struct place 0 0 -0.1 0.75 (new Color 255 255 255 5))))
 
 (def fn-c (f-then fn-s (f-dup fn-a 150)))
 (def fn-d (f-then fn-s (f-dup fn-b 175)))
@@ -76,3 +77,5 @@
   (fn-f centre)
   (fn-f (assoc centre :r (Math/PI)))
   (done))
+
+(fun)
