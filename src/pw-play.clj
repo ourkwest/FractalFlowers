@@ -10,6 +10,7 @@
   (if (not (file-exists? f)) (spit f html)))
 
 (def img (image 800 800))
+(defn done [] (write-to-file img (filename ".png")))
   
 (comment "geometry")
 
@@ -17,7 +18,7 @@
 
 (defn drawplace
   [p]
-  (spot img (p :x) (p :y) (* (p :s) 25) (int (p :c))))
+  (spot img (p :x) (p :y) (* (p :r) 2) (int (p :c))))
 
 (defn addplace 
   [p2 p1]
@@ -73,6 +74,5 @@
 
 (defn fun []
   (fn-f centre)
-  (fn-f (assoc centre :r (Math/PI))))
-
-(defn done [] (write-to-file img (filename ".png")))
+  (fn-f (assoc centre :r (Math/PI)))
+  (done))
